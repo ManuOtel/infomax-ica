@@ -17,7 +17,7 @@ from scipy.linalg import norm as mnorm
 EPS = 1e-16
 MAX_W = 1e8
 ANNEAL = 0.9
-MAX_STEP = 500
+MAX_STEP = 10000
 MIN_LRATE = 1e-6
 W_STOP = 1e-6
 

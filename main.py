@@ -25,59 +25,54 @@ def get_time_wave(audio: np.ndarray, sr, length, pad):
     pp_audio2 = np.expand_dims(pp_audio, axis=1)
     t_audio = np.hstack((pp_audio2, time)).T
     #print(pp_audio.shape)
-    return t_audio, p_audio.T, pp_audio2.T
+    return t_audio.T, pp_audio2
 
 if __name__ == '__main__':
     # Play all files in the current directory
     path = 'wav_example.wav'
     audio, sr = wave_read(path)
 
-    t_audio, p_audio, pp_audio = get_time_wave(audio, sr, 5, True)
+    t_audio, original_audio = get_time_wave(audio, sr, 5, True)
 
-    print(sr)
-    print(audio.shape)
-    print(t_audio.shape)
-    print(p_audio.shape)
-    print(pp_audio.shape)
+    _ ,S ,_ = ica1(t_audio.T, 2)
 
-    #sd.play(pp_audio[0, :], sr)
+    # print(A.shape)
+    # print(S.shape)
+    # print(W.shape)
 
-    #res = t_audio[0,:len(audio)]-audio
-    # print(t_audio[0,:len(audio)].shape)
-    # print(audio.squeeze().shape)
-    res = t_audio[0,:len(audio)]-audio.squeeze()
-    for i in res:
-        if i != 0:
-            print(i)
-    #A,S,W = ica1(pp_audio, 2)
-
-    ica = FastICA(n_components=2, whiten='unit-variance', max_iter=int(1e4))
-    S = ica.fit_transform(t_audio.T)
-
-    print(S.shape)
-    print(S)
-
-    plt.subplot(4,1,1)
-    plt.plot(t_audio[1,:len(audio)], audio)
-    plt.subplot(4,1,2)
-    plt.plot(t_audio[1,:], p_audio[0,:])
-    plt.subplot(4,1,3)
-    plt.plot(t_audio[1,:], pp_audio[0,:])
-    plt.subplot(4,1,4)
-    plt.plot(S[:, 0], S[:, 1])
+    plt.subplot(2,1,1)
+    plt.plot(t_audio)
+    plt.subplot(2,1,2)
+    plt.plot(S.T)
     plt.show()
 
-    # print(S[0,:5000].shape)
+    # ica = FastICA(n_components=2, whiten='unit-variance', max_iter=int(1e4))
+    # S = ica.fit_transform(t_audio.T)
 
-    sd.play(S[1,:], sr)
+    # print(S.shape)
+    # print(S)
 
-    plt.plot(S[:, 0], S[:, 1])
-    plt.show()
+    # plt.subplot(4,1,1)
+    # plt.plot(t_audio[1,:len(audio)], audio)
+    # plt.subplot(4,1,2)
+    # plt.plot(t_audio[1,:], p_audio[0,:])
+    # plt.subplot(4,1,3)
+    # plt.plot(t_audio[1,:], pp_audio[0,:])
+    # plt.subplot(4,1,4)
+    # plt.plot(S[:, 0], S[:, 1])
+    # plt.show()
+
+    # # print(S[0,:5000].shape)
+
+    # #sd.play(S[1,:], sr)
+
+    # plt.plot(S[:, 0], S[:, 1])
+    # plt.show()
     
-    sd.play(S[0,:], sr)
+    # #sd.play(S[0,:], sr)
 
-    wavfile.write('reconstructed_1.wav', sr, S[:5000,0])
-    wavfile.write('reconstructed_2.wav', sr, S[:5000,1])
+    # wavfile.write('reconstructed_1.wav', sr, S[:5000,0])
+    # wavfile.write('reconstructed_2.wav', sr, S[:5000,1])
 
-    plt.plot(S[:, 0], S[:, 1])
-    plt.show()
+    # plt.plot(S[:, 0], S[:, 1])
+    # plt.show()
